@@ -1,12 +1,12 @@
-services:
+databases:
   # 1. PostgreSQL Database Service
-  - type: postgres
-    name: ai-start-validator-db
-    databaseName: AI-Start-Validator
+  - name: ai-startup-validator
+    databaseName: ai_startup_validator
     user: postgres
     plan: free
     region: oregon
 
+services:
   # 2. FastAPI Backend Web Service
   - type: web
     name: ai-startup-validator-api
@@ -20,7 +20,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: ai-start-validator-db
+          name: ai-startup-validator
           property: connectionString
       - key: LLM_PROVIDER
         value: gemini
@@ -33,13 +33,13 @@ services:
       - key: JWT_ALGORITHM
         value: HS256
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: 1440
+        value: "1440"
       - key: LOG_LEVEL
         value: INFO
       - key: SEARCH_ENGINE
         value: duckduckgo
       - key: MAX_RESULTS
-        value: 5
+        value: "5"
       - key: TAVILY_API_KEY
         sync: false
       - key: SERPAPI_API_KEY
@@ -58,8 +58,4 @@ services:
     startCommand: "npx vite preview --host 0.0.0.0 --port $PORT"
     envVars:
       - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: ai-startup-validator-api
-          property: host
-          format: "https://${host}/api"
+        value: https://ai-startup-validator-api.onrender.com/api
