@@ -2,7 +2,6 @@ databases:
   # 1. PostgreSQL Database Service
   - name: ai-startup-validator
     databaseName: ai_startup_validator
-    user: postgres
     plan: free
     region: oregon
 
