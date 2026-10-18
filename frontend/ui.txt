@@ -1,0 +1,253 @@
+================================================================================
+           AI STARTUP IDEA VALIDATOR — FRONTEND UI SPECIFICATION
+================================================================================
+
+1. OVERVIEW & PURPOSE
+--------------------------------------------------------------------------------
+The AI Startup Idea Validator Frontend is a modern, high-performance web dashboard
+designed to help early-stage entrepreneurs, venture evaluators, and product managers
+validate startup ideas before investing significant capital and time.
+
+The UI connects to the FastAPI backend and orchestrates a seamless end-to-end
+experience: submitting an idea, visualizing real-time agent execution, and exploring
+a rich, interactive validation report with Chart.js visual analytics, competitor
+breakdowns, SWOT quadrants, MVP roadmaps, and historical validation archives.
+
+--------------------------------------------------------------------------------
+2. TARGET TECHNOLOGY STACK
+--------------------------------------------------------------------------------
+- Framework: React.js (v18+) with Vite (Fast HMR and bundling)
+- Styling: Tailwind CSS (v3.4+) + PostCSS + Autoprefixer
+- Icons: Lucide React (Clean, consistent modern icons)
+- Charting & Visualizations: Chart.js + react-chartjs-2
+  * Radar Chart: 6-Dimension Venture Viability vs Industry Benchmark
+  * Line Chart: 12-Month Google Search Volume Trends
+  * Bar Chart: Competitor Feature Depth & Accessibility Comparison
+  * Doughnut / Gauge: Overall Viability & Risk Heatmap
+- State & API Management:
+  * Axios for HTTP calls with JWT bearer interceptors
+  * Context API / Zustand for global auth and active report state
+- Notifications & Feedback: Sonner or React-Hot-Toast
+- Animation & Transitions: Framer Motion (Page transitions, progressive reveals)
+
+--------------------------------------------------------------------------------
+3. USER FLOWS & ARCHITECTURAL SITEMAP
+--------------------------------------------------------------------------------
+
+[ Landing / Auth ] ────► [ Dashboard: Idea Input ]
+                                  │
+                                  ▼ (Submit Idea)
+                     [ Live Agent Pipeline Stepper ]
+                                  │
+                                  ▼ (Completion)
+                     [ Interactive Validation Report ]
+                        ├── Executive Score & KPI Cards
+                        ├── Radar Viability Chart
+                        ├── Google Trends Time-Series Chart
+                        ├── Competitor Matrix & Comparison Chart
+                        ├── Interactive SWOT 4-Quadrant Grid
+                        ├── Risk Assessment Gauge & Mitigations
+                        ├── Lean MVP Roadmap (Must / Nice / Future)
+                        └── Real-Time News & Live Market Headlines
+                                  │
+                                  ▼
+                     [ Historical Validations Drawer / Library ]
+
+--------------------------------------------------------------------------------
+4. PAGE & COMPONENT BREAKDOWN (DETAILED FEATURES)
+--------------------------------------------------------------------------------
+
+PAGE 1: NAVIGATION & GLOBAL HEADER
+--------------------------------------------------------------------------------
+- Brand Logo: "Antigravity Startup Validator" with gradient spark icon.
+- Navigation Links:
+  * "New Validation" (Quick action button)
+  * "Past Validations" (Opens history drawer or history view)
+  * "Market Trends Explorer" (Direct standalone keyword trend query)
+- User Profile & Auth Status:
+  * Logged In: Displays user name, email avatar badge, and "Logout" dropdown.
+  * Guest: Shows "Log In" / "Register" modal trigger.
+- Theme Toggle: Dark Mode (Default Slate-900/950) / Light Mode (Slate-50).
+
+PAGE 2: STARTUP IDEA SUBMISSION FORM (`IdeaSubmissionForm`)
+--------------------------------------------------------------------------------
+- Clean, focused minimal card interface matching the exact 3 input layout:
+- Inputs (Strictly 3 Minimal Fields):
+  1. Venture title (Optional Text Field):
+     Top-left position. Placeholder: "e.g., TheraCopilot AI".
+     Badge: "Optional".
+  2. Industry (Optional Dropdown Select):
+     Top-right position. Label: "Industry", Badge: "Optional".
+     Default: "Select a category"
+     Options: "B2B SaaS", "HealthTech / BioTech", "FinTech / Crypto", "AI & DevTools",
+              "E-Commerce & Retail", "EdTech", "Creator Economy", "CleanTech", "Other"
+  3. Elevator pitch (Required Textarea):
+     Full width position below title & industry.
+     Label: "Elevator pitch", Badge: Live character counter ("0 characters").
+     Placeholder: "Describe the core problem, who has it, and your proposed solution..."
+     Validation: Minimum 5 characters.
+  4. Quick Inspiration Pills (Directly beneath the elevator pitch):
+     Clickable pre-fill pills that populate the form instantly:
+     [ AI Telehealth Scribe ]  [ Micro-Invoice Matcher ]  [ B2B Contract Reviewer ]
+
+* Note: Target Customer and Resource Constraints are intentionally omitted from
+  the user interface to ensure zero onboarding friction. Agent 1 (Idea Extraction)
+  and Agent 4 (SWOT/Feasibility) automatically infer target personas and standard
+  lean startup constraints directly from the elevator pitch text.
+
+- Submit Button:
+  * Gradient call-to-action: "Validate Startup Idea (Run Multi-Agent Engine)"
+  * Triggers validation and smoothly transitions to the live agent stepper.
+
+PAGE 3: LIVE AGENT PIPELINE PROGRESS STEPPER (`AgentPipelineStepper`)
+--------------------------------------------------------------------------------
+- Displays real-time progress as the backend executes the sequential agents:
+  1. [Agent 1] Idea Extraction Agent: Dissecting problem, solution, and keywords.
+  2. [Agent 2] Market Trends Agent: Querying Google Trends & NewsData.io headlines.
+  3. [Agent 3] Competitor Intelligence Agent: Scanning Tavily & SerpAPI for players.
+  4. [Agent 4] SWOT & Feasibility Agent: Assessing strengths, weaknesses & risks.
+  5. [Agent 5] MVP Recommendation Agent: Scoping Must-Have & Nice-to-Have features.
+  6. [Agent 6] Report & Scoring Agent: Computing 0-100 score & synthesizing verdict.
+- Visual Features:
+  * Animated pulsing ring on the currently active step.
+  * Green checkmark on completed steps.
+  * Elapsed seconds timer.
+  * Engaging micro-copy explaining what data is currently being fetched.
+
+PAGE 4: INTERACTIVE VALIDATION DASHBOARD (`ValidationDashboard`)
+--------------------------------------------------------------------------------
+Once the pipeline completes, this rich multi-section report renders:
+
+SECTION 4.1: EXECUTIVE SUMMARY & LAUNCH VERDICT
+- Launch Readiness Banner:
+  * "Ready to Launch" (Green badge / Glow)
+  * "Requires Refinement" (Amber badge / Glow)
+  * "High Risk / Pivot Advised" (Red/Rose badge)
+- Composite Viability Score Circle / Gauge (0–100):
+  * Large, bold animated radial progress bar showing the final score.
+- 4 Key Metric Breakdown Tiles:
+  * Market Demand (0–100)
+  * Technical Feasibility (0–100)
+  * Competition Barrier / Moat (0–100)
+  * Business Viability (0–100)
+- Executive Verdict Statement:
+  * Clear, investor-grade synthesis explaining the core decision rationale.
+
+SECTION 4.2: VISUAL ANALYTICS & INTERACTIVE CHARTS
+- Widget A: 6-Pillar Radar Chart (Chart.js)
+  * Visualizes "Your Startup" vs "Industry Benchmark".
+  * Axes: Market Demand, Technical Feasibility, Competitive Moat, Business Viability,
+    Execution Speed, Regulatory Resilience.
+  * Tooltips displaying exact percentages and pillar definitions on hover.
+- Widget B: Google Trends Search Volume Line Chart (Chart.js)
+  * Plots 12-month historical search index (0–100) from PyTrends.
+  * Interactive tooltips showing exact month and relative interest score.
+  * Trend indicator badge: "Rapidly Growing", "Moderate Growth", "Stable", or "Declining".
+- Widget C: Competitor Comparison Bar Matrix (Chart.js)
+  * Side-by-side grouped bar chart comparing discovered incumbents against your venture.
+  * Dimensions: Feature Breadth, UX Specialization, and Price Accessibility.
+- Widget D: Risk Gauge & Heatmap Distribution
+  * Visual thermometer / gauge showing composite risk percentage.
+  * Category tiles: Market Demand Risk, Feasibility Risk, Competitive Risk, Business Model Risk.
+
+SECTION 4.3: COMPETITOR INTELLIGENCE CARDS
+- Cards for each discovered real-world competitor (from Tavily/SerpAPI).
+- Details per competitor:
+  * Name & verified domain link.
+  * Concise offering description.
+  * Strengths pills (Green tags) & Weaknesses/Gaps pills (Amber/Rose tags).
+  * Direct source citation links.
+
+SECTION 4.4: 4-QUADRANT SWOT MATRIX
+- Modern 2x2 responsive grid with distinct color codes:
+  * Strengths (Emerald Green): Key structural advantages and differentiators.
+  * Weaknesses (Rose/Red): Internal limitations, resource dependencies, or gaps.
+  * Opportunities (Blue/Indigo): Market shifts, unserved niches, expansion angles.
+  * Threats (Amber/Orange): Incumbent feature creep, platform policy risks, pricing pressure.
+
+SECTION 4.5: LEAN MVP ROADMAP & FEATURE PRIORITIZATION
+- Interactive 3-tier milestone roadmap:
+  * Tier 1: "Must-Have (Sprint 1–2)" — Core features required to validate value prop.
+    Each item displays: Feature Title, Inclusion Reason, and Validation Goal (KPI).
+  * Tier 2: "Nice-to-Have (Sprint 3–4)" — UX improvements and secondary retention hooks.
+  * Tier 3: "Future Features (Quarterly Scale)" — Post-PMF features to avoid building now.
+- Strategic Launch Advice Card:
+  * Founder guidance on lean iteration, user interviews, and no-code validation strategies.
+
+SECTION 4.6: REAL-TIME MARKET NEWS & INDUSTRY SENTIMENT
+- Live news headline cards retrieved from NewsData.io / News API.
+- Each item displays: Article Title, Publisher Source, Publication Date, and external link.
+
+SECTION 4.7: REPORT ACTIONS & EXPORT
+- "Print / Export to PDF" button: Clean print stylesheet formatted for investor pitch decks.
+- "Copy Shareable Summary" button: Copies formatted markdown report to clipboard.
+- "Save to My Ventures": Saves report to user's MongoDB historical account.
+
+PAGE 5: HISTORICAL VALIDATIONS DRAWER / ARCHIVE (`ValidationsHistory`)
+--------------------------------------------------------------------------------
+- Slide-over drawer or dedicated tab listing all historical validations.
+- Features:
+  * Search bar to filter saved ideas by keyword or industry.
+  * Idea Card: Title, Date, Validation Score badge, Launch Verdict pill, and Industry tag.
+  * Click to load full saved report instantly from MongoDB (`GET /api/ideas/{id}`).
+  * Delete action (`DELETE /api/ideas/{id}`) with confirmation modal.
+
+PAGE 6: AUTHENTICATION MODAL (`AuthModal`)
+--------------------------------------------------------------------------------
+- Tabbed dialog: "Sign In" / "Create Account".
+- Fields:
+  * Name (for registration)
+  * Email Address
+  * Password (with show/hide toggle)
+- Connects to `/api/auth/login` and `/api/auth/register`.
+- Stores JWT token securely in localStorage and sets global user state.
+- Graceful guest fallback: Allows immediate idea validation even without signing in.
+
+--------------------------------------------------------------------------------
+5. DESIGN SYSTEM & UI/UX SPECIFICATIONS
+--------------------------------------------------------------------------------
+- Color Palette:
+  * Backgrounds: Deep Slate (`bg-slate-950` / `bg-slate-900`)
+  * Cards / Surfaces: Semi-transparent glass with subtle borders (`bg-slate-900/60 border-slate-800/80 backdrop-blur-md`)
+  * Primary Accent: Electric Indigo / Violet (`from-indigo-500 to-violet-600`)
+  * Success / Launch: Emerald (`text-emerald-400 border-emerald-500/30 bg-emerald-500/10`)
+  * Warning / Refinement: Amber (`text-amber-400 border-amber-500/30 bg-amber-500/10`)
+  * Danger / Pivot: Rose (`text-rose-400 border-rose-500/30 bg-rose-500/10`)
+- Typography:
+  * Headings: Inter or Plus Jakarta Sans (Bold, high readability, tracking-tight)
+  * Monospace / Metrics: JetBrains Mono (For scores, indices, and currency values)
+- Responsiveness:
+  * Fully responsive grid: 1 column on mobile (`< 768px`), 2 columns on tablet (`768px–1024px`),
+    and 3–4 columns on desktop (`> 1024px`).
+- Feedback & Empty States:
+  * Skeleton loaders during query execution.
+  * Friendly error toasts if rate limits occur or backend is unreachable.
+
+--------------------------------------------------------------------------------
+6. API CONTRACT INTEGRATION MAPPING
+--------------------------------------------------------------------------------
+- `GET /api/health`:
+  * Verifies server status, active agents count (6), and database connection.
+- `POST /api/auth/register`:
+  * Payload: `{ "name": "...", "email": "...", "password": "..." }`
+- `POST /api/auth/login`:
+  * Payload: `{ "email": "...", "password": "..." }`
+  * Returns: `{ "token": "jwt_string", "user": { ... } }`
+- `GET /api/auth/me`:
+  * Headers: `Authorization: Bearer <jwt_token>`
+- `POST /api/validate`:
+  * Payload: `{ "title": "...", "idea": "...", "target_audience": "...", "industry": "...", "constraints": [...] }`
+  * Returns: Full structured validation document including `validation_score`, `launch_readiness_verdict`,
+    `scores_breakdown`, `visual_statistics`, `competitors`, `swot_analysis`, `mvp_recommendation`, and `news_headlines`.
+- `GET /api/ideas`:
+  * Returns list of user's past validations.
+- `GET /api/ideas/{id}`:
+  * Returns specific historical validation report.
+- `DELETE /api/ideas/{id}`:
+  * Deletes a specific validation from MongoDB.
+- `GET /api/trends?keyword={query}`:
+  * Standalone direct query for Google search volume interest and timeline.
+
+================================================================================
+                    END OF UI SPECIFICATION DOCUMENT
+================================================================================

@@ -1,0 +1,65 @@
+services:
+  # 1. PostgreSQL Database Service
+  - type: postgres
+    name: ai-start-validator-db
+    databaseName: AI-Start-Validator
+    user: postgres
+    plan: free
+    region: oregon
+
+  # 2. FastAPI Backend Web Service
+  - type: web
+    name: ai-startup-validator-api
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "python -m uvicorn app.main:app --app-dir src --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-start-validator-db
+          property: connectionString
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: STARTUP_VALIDATOR_MODEL
+        value: gemini-3.8-flash
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 1440
+      - key: LOG_LEVEL
+        value: INFO
+      - key: SEARCH_ENGINE
+        value: duckduckgo
+      - key: MAX_RESULTS
+        value: 5
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: SERPAPI_API_KEY
+        sync: false
+      - key: NEWSDATA_API_KEY
+        sync: false
+
+  # 3. React Frontend Web Service
+  - type: web
+    name: ai-startup-validator-ui
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    startCommand: "npx vite preview --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: ai-startup-validator-api
+          property: host
+          format: "https://${host}/api"

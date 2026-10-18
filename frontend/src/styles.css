@@ -1,0 +1,143 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-ink: var(--ink);
+  --color-sand: var(--sand);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+:root {
+  --radius: 0.9rem;
+  /* warm paper off-white, never pure white */
+  --background: oklch(0.967 0.007 92);
+  --foreground: oklch(0.24 0.015 160);
+  --card: oklch(0.984 0.005 92);
+  --card-foreground: oklch(0.24 0.015 160);
+  --popover: oklch(0.984 0.005 92);
+  --popover-foreground: oklch(0.24 0.015 160);
+  --primary: oklch(0.46 0.09 162);
+  --primary-foreground: oklch(0.98 0.005 92);
+  --secondary: oklch(0.93 0.01 150);
+  --secondary-foreground: oklch(0.32 0.03 160);
+  --muted: oklch(0.935 0.008 120);
+  --muted-foreground: oklch(0.5 0.02 160);
+  --accent: oklch(0.66 0.14 55);
+  --accent-foreground: oklch(0.98 0.005 92);
+  --destructive: oklch(0.58 0.18 27);
+  --destructive-foreground: oklch(0.98 0.005 92);
+  --border: oklch(0.885 0.01 130);
+  --input: oklch(0.895 0.01 130);
+  --ring: oklch(0.46 0.09 162);
+  --success: oklch(0.55 0.11 165);
+  --warning: oklch(0.74 0.14 70);
+  --danger: oklch(0.58 0.18 27);
+  --ink: oklch(0.24 0.015 160);
+  --sand: oklch(0.92 0.012 110);
+  --chart-1: oklch(0.46 0.09 162);
+  --chart-2: oklch(0.66 0.14 55);
+  --chart-3: oklch(0.58 0.1 195);
+  --chart-4: oklch(0.74 0.14 70);
+  --chart-5: oklch(0.6 0.03 160);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility surface {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 1px 2px oklch(0.22 0.03 250 / 0.04), 0 14px 36px -26px oklch(0.22 0.03 250 / 0.35);
+}
+
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.28;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+  }
+}
+
+@utility reveal-init {
+  opacity: 0;
+}
+
+/* Ensure toast notifications never overlap the sticky top header (h-16 = 64px) */
+[data-sonner-toaster][data-y-position="top"] {
+  top: 84px !important;
+}
+

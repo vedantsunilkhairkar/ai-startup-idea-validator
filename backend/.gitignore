@@ -1,0 +1,12 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+reports/generated/*.md
+frontend/node_modules/
+frontend/dist/
+.DS_Store
+Improvement.md
