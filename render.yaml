@@ -1,12 +1,5 @@
-databases:
-  # 1. PostgreSQL Database Service
-  - name: ai-startup-validator
-    databaseName: ai_startup_validator
-    plan: free
-    region: oregon
-
 services:
-  # 2. FastAPI Backend Web Service
+  # 1. FastAPI Backend Web Service
   - type: web
     name: ai-startup-validator-api
     runtime: python
@@ -18,9 +11,7 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: ai-startup-validator
-          property: connectionString
+        sync: false
       - key: LLM_PROVIDER
         value: gemini
       - key: STARTUP_VALIDATOR_MODEL
@@ -46,7 +37,7 @@ services:
       - key: NEWSDATA_API_KEY
         sync: false
 
-  # 3. React Frontend Web Service
+  # 2. React Frontend Web Service
   - type: web
     name: ai-startup-validator-ui
     runtime: node
